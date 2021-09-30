@@ -4,8 +4,7 @@ orbs:
   android: circleci/android@1.0.3
   gcp-cli: circleci/gcp-cli@2.2.0
   sonarcloud: sonarsource/sonarcloud@1.0.0
-#  sonarcloud: sonarsource/sonarcloud@1.0.2
-#  sonarqube: clicklogiq/sonarqube@1.0.1
+  sonarqube: clicklogiq/sonarqube@1.0.1
 
 jobs:
 #  unit-test:
@@ -37,9 +36,6 @@ jobs:
     steps:
       - checkout
       - sonarcloud/scan
-#      - run:
-#          name: Analyze on SonarCloud
-#          command: gradle build sonarqube
 
   release-build:
     executor:
@@ -76,7 +72,6 @@ workflows:
   main:
     jobs:
       - build
-#          context: sonarcloud
 
 #  test-and-build:
 #    jobs:
