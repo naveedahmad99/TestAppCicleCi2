@@ -40,9 +40,6 @@ jobs:
   lint-android:
     description: Run Lint
     parameters:
-      exec:
-        type: executor
-        default: default
       checkout-recursively:
         type: boolean
         default: false
