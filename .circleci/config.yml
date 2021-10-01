@@ -58,7 +58,7 @@ jobs:
         description: Paths where its need to collect build artifacts
         type: string
         default: app/build/reports
-    executor: << parameters.exec >>
+    executor: hadolint_executor
     steps:
         - run-lint:
             checkout-recursively: << parameters.checkout-recursively >>
