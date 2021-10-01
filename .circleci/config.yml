@@ -3,60 +3,82 @@ version: 2.1
 orbs:
   android: circleci/android@1.0.3
   gcp-cli: circleci/gcp-cli@2.2.0
-#  sonarcloud: sonarsource/sonarcloud@1.0.2
-#  sonarqube: clicklogiq/sonarqube@1.0.1
+  sonarcloud: sonarsource/sonarcloud@1.0.0
+  sonarqube: clicklogiq/sonarqube@1.0.1
 
 jobs:
-#  unit-test:
-#    executor:
-#      name: android/android-machine
-#      resource-class: xlarge
-#    steps:
-#      - checkout
-#      - android/restore-gradle-cache
-#      - android/restore-build-cache
-#      #      - android/run-tests:
-#      #          test-command: ./gradlew testDebug
-#      - android/save-gradle-cache
-#      - android/save-build-cache
-#      - run:
-#          name: Save test results
-#          command: |
-#            sudo chmod +x ./gradlew
-#            mkdir -p ~/test-results/junit/
-#            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
-#          when: always
-#      - store_test_results:
-#          path: ~/test-results
-#      - store_artifacts:
-#          path: ~/test-results/junit
+  unit-test:
+    executor:
+      name: android/android-machine
+      resource-class: xlarge
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      #      - android/run-tests:
+      #          test-command: ./gradlew testDebug
+      - android/save-gradle-cache
+      - android/save-build-cache
+      - run:
+          name: Save test results
+          command: |
+            sudo chmod +x ./gradlew
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: ~/test-results/junit
   build:
     docker:
       - image: 'circleci/openjdk:11-jdk'
     steps:
       - checkout
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-        
-      - run:
-          name: Analyze on SonarCloud
-          command: gradle build sonarqube
+      - sonarcloud/scan
 
-#  release-build:
-#    executor:
-#      name: android/android-machine
-#      resource-class: xlarge
-#    steps:
-#      - checkout
-#      - android/restore-gradle-cache
-#      - android/restore-build-cache
-#      - run:
-#          name: Assemble release build
-#          command: |
-#            ./gradlew assembleRelease
-#      - store_artifacts:
-#          path: app/build/outputs/apk/release
+  lint-android:
+    description: Run Lint
+    parameters:
+      checkout-recursively:
+        type: boolean
+        default: false
+      command-to-run:
+        description: Command to run
+        type: string
+        default: ./gradlew lint
+      prepare-lint-artifacts:
+        description: Should prepare lint HTML files
+        type: boolean
+        default: false
+      store-artifacts-path:
+        description: Paths where its need to collect build artifacts
+        type: string
+        default: app/build/reports
+    executor: hadolint_executor
+    steps:
+        - run-lint:
+            checkout-recursively: << parameters.checkout-recursively >>
+            command-to-run: << parameters.command-to-run >>
+            prepare-lint-artifacts: << parameters.prepare-lint-artifacts >>
+            store-artifacts-path: << parameters.store-artifacts-path >>
+
+  release-build:
+    executor:
+      name: android/android-machine
+      resource-class: xlarge
+    steps:
+      - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - run:
+          name: Assemble release build
+          command: |
+            ./gradlew assembleRelease
+      - store_artifacts:
+          path: app/build/outputs/apk/release
+
+
 
 
 #  code-analysis:
@@ -78,8 +100,11 @@ workflows:
   main:
     jobs:
       - build
-#          context: SonarCloud
 
-#  test-and-build:
-#    jobs:
-#      - release-build
+  run-lint:
+    jobs:
+      - lint-android
+
+  release-build:
+    jobs:
+      - release-build
