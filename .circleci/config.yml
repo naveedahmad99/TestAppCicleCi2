@@ -37,31 +37,31 @@ jobs:
       - checkout
       - sonarcloud/scan
 
-  lint-android:
-    description: Run Lint
-    parameters:
-      checkout-recursively:
-        type: boolean
-        default: false
-      command-to-run:
-        description: Command to run
-        type: string
-        default: ./gradlew lint
-      prepare-lint-artifacts:
-        description: Should prepare lint HTML files
-        type: boolean
-        default: false
-      store-artifacts-path:
-        description: Paths where its need to collect build artifacts
-        type: string
-        default: app/build/reports
-    executor: hadolint_executor
-    steps:
-        - run-lint:
-            checkout-recursively: << parameters.checkout-recursively >>
-            command-to-run: << parameters.command-to-run >>
-            prepare-lint-artifacts: << parameters.prepare-lint-artifacts >>
-            store-artifacts-path: << parameters.store-artifacts-path >>
+#  lint-android:
+#    description: Run Lint
+#    parameters:
+#      checkout-recursively:
+#        type: boolean
+#        default: false
+#      command-to-run:
+#        description: Command to run
+#        type: string
+#        default: ./gradlew lint
+#      prepare-lint-artifacts:
+#        description: Should prepare lint HTML files
+#        type: boolean
+#        default: false
+#      store-artifacts-path:
+#        description: Paths where its need to collect build artifacts
+#        type: string
+#        default: app/build/reports
+#    executor: hadolint_executor
+#    steps:
+#        - run-lint:
+#            checkout-recursively: << parameters.checkout-recursively >>
+#            command-to-run: << parameters.command-to-run >>
+#            prepare-lint-artifacts: << parameters.prepare-lint-artifacts >>
+#            store-artifacts-path: << parameters.store-artifacts-path >>
 
   release-build:
     executor:
@@ -101,9 +101,9 @@ workflows:
     jobs:
       - build
 
-  run-lint2:
-    jobs:
-      - lint-android
+#  run-lint2:
+#    jobs:
+#      - lint-android
 
   release-build:
     jobs:
