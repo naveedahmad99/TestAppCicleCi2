@@ -9,6 +9,10 @@ android {
     compileSdk 30
 
     defaultConfig {
+        configurations.all {
+            resolutionStrategy { force 'androidx.core:core-ktx:1.6.0' }
+        }
+
         applicationId "com.nido.testappcicleci"
         minSdk 21
         targetSdk 30
@@ -56,4 +60,5 @@ sonarqube {
 }
 repositories {
     mavenCentral()
+    google()
 }
