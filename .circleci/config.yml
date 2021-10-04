@@ -76,9 +76,9 @@ workflows:
 #    jobs:
 #      - build
 
-  release-build:
-    jobs:
-      - release-build
+#  release-build:
+#    jobs:
+#      - release-build
 
   lint-code:
     jobs:
