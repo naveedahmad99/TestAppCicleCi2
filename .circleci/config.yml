@@ -43,11 +43,13 @@ jobs:
       name: android/android-machine
       resource-class: xlarge
     steps:
+      - checkout
       - android/restore-gradle-cache
       - android/restore-build-cache
       - run:
           name: Run Tests
-          command: ./gradlew lint test
+          command: |
+            ./gradlew lint test
 
   release-build:
     executor:
