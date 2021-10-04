@@ -1,7 +1,6 @@
 package com.nido.testappcicleci
 
 import org.junit.Test
-
 import org.junit.Assert.*
 
 /**

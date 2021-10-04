@@ -82,4 +82,7 @@ workflows:
 
   lint-code:
     jobs:
-      - github-super-linter/lint
+      - github-super-linter/lint:
+          context: Super-Linter-Options
+          scan-dir: app
+          version: v3
