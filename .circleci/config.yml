@@ -5,6 +5,7 @@ orbs:
   gcp-cli: circleci/gcp-cli@2.2.0
   sonarcloud: sonarsource/sonarcloud@1.0.0
   sonarqube: clicklogiq/sonarqube@1.0.1
+  github-super-linter: circleci/github-super-linter@1.0
 
 jobs:
   unit-test:
@@ -108,3 +109,7 @@ workflows:
   release-build:
     jobs:
       - release-build
+
+  lint-code:
+    jobs:
+      - github-super-linter/lint
