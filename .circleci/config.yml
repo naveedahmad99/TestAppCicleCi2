@@ -38,6 +38,17 @@ jobs:
 #      - checkout
 #      - sonarcloud/scan
 
+  check-lint:
+    executor:
+      name: android/android-machine
+      resource-class: xlarge
+    steps:
+      - android/restore-gradle-cache
+      - android/restore-build-cache
+      - run:
+          name: Run Tests
+          command: ./gradlew lint test
+
   release-build:
     executor:
       name: android/android-machine
@@ -82,7 +93,8 @@ workflows:
 
   lint-code:
     jobs:
-      - github-super-linter/lint:
-          scan-dir: app
-          version: v3
+      - check-lint
+#      - github-super-linter/lint:
+#          scan-dir: app
+#          version: v3
 #          context: Super-Linter-Options
